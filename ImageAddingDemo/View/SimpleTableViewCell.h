@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  SimpleTableViewCell.h
 //  ImageAddingDemo
 //
 //  Created by ryan on 1/14/16.
@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController
-    : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface SimpleTableViewCell : UITableViewCell
 
 @end
