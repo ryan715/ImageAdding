@@ -140,6 +140,34 @@
   return resultingImage;
 }
 
+- (UIImage *)basicDesignWithoutWall {
+
+  UIImage *floorImage = [UIImage imageNamed:self.floor];
+  UIGraphicsBeginImageContext(floorImage.size);
+  [floorImage drawInRect:CGRectMake(0, 0, floorImage.size.width,
+                                    floorImage.size.height)];
+
+  UIImage *curtainImage = [UIImage imageNamed:self.curtain];
+  [curtainImage drawInRect:CGRectMake(0, 0, curtainImage.size.width,
+                                      curtainImage.size.height)];
+
+  UIImage *sofaImage = [UIImage imageNamed:self.sofa];
+  [sofaImage
+      drawInRect:CGRectMake(0, 0, sofaImage.size.width, sofaImage.size.height)];
+
+  UIImage *furnitureImage = [UIImage imageNamed:self.furniture];
+  [furnitureImage drawInRect:CGRectMake(0, 0, furnitureImage.size.width,
+                                        furnitureImage.size.height)];
+
+  UIImage *roofImage = [UIImage imageNamed:self.roof];
+  [roofImage
+      drawInRect:CGRectMake(0, 0, roofImage.size.width, roofImage.size.height)];
+
+  UIImage *resultingImage = UIGraphicsGetImageFromCurrentImageContext();
+  UIGraphicsEndImageContext();
+  return resultingImage;
+}
+
 - (void)showMenu {
   NSArray *menuItems = @[
 
@@ -169,6 +197,10 @@
                    image:[UIImage imageNamed:@"home_icon"]
                   target:self
                   action:@selector(changeCurtain)],
+    [KxMenuItem menuItem:@"自定义墙纸"
+                   image:[UIImage imageNamed:@"home_icon"]
+                  target:self
+                  action:@selector(changeWallPaper)],
   ];
 
   KxMenuItem *first = menuItems[0];
@@ -240,6 +272,39 @@
   self.furniture =
       [NSString stringWithFormat:@"%@%d", @"furniture", furnitureSeq];
   [self makeDesign];
+}
+
+- (void)changeWallPaper {
+  [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+  //  if (furnitureSeq < 2) {
+  //    furnitureSeq++;
+  //  } else {
+  //    furnitureSeq = 0;
+  //  }
+  //  self.furniture =
+  //      [NSString stringWithFormat:@"%@%d", @"furniture", furnitureSeq];
+  //  [self makeDesign];
+  UIView *wallPaper = [[UIView alloc] initWithFrame:self.view.bounds];
+  UIImage *wallSample = [UIImage imageNamed:@"wallSample.png"];
+
+  CGSize wallSize = CGSizeMake(50, 50);
+
+  // 设置成为当前正在使用的context
+  UIGraphicsBeginImageContext(wallSize);
+  // 绘制改变大小的图片
+  [wallSample drawInRect:CGRectMake(0, 0, wallSize.width, wallSize.height)];
+  // 从当前context中创建一个改变大小后的图片
+  UIImage *scaledImage = UIGraphicsGetImageFromCurrentImageContext();
+  // 使当前的context出堆栈
+  UIGraphicsEndImageContext();
+
+  UIColor *bgColor = [UIColor colorWithPatternImage:scaledImage];
+  //  self.view.backgroundColor = [UIColor colorWithPatternImage:image];
+  [wallPaper setBackgroundColor:bgColor];
+  [self.view addSubview:wallPaper];
+
+  self.basicImage.image = [self basicDesignWithoutWall];
+  [self.view addSubview:self.basicImage];
 }
 
 - (void)makeDesign {
